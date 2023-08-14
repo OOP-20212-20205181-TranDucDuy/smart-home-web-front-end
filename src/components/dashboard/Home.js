@@ -21,7 +21,7 @@ import { mainListItems, secondaryListItems } from './listItems';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
-import axios from 'axios'
+
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -84,13 +84,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default async function Dashboard() {
-  const accessToken = localStorage.getItem('accessToken');
-  await axios.get('https://api.example.com/user/info', {
-    headers: {
-      'Authorization': `Bearer ${accessToken}`
-    }
-  })
+export default function Home() {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
