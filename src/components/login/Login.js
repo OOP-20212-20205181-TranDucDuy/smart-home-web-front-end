@@ -53,7 +53,7 @@ const Login = () => {
   
         console.log('Logged in:', response.data);
         localStorage.setItem('accessToken', response.data.accessToken);
-        
+        localStorage.setItem('role',response.data.roles)
       if (response.data.roles === 'admin') {
         navigate('/dashboard'); // Redirect to admin dashboard
       } else {
