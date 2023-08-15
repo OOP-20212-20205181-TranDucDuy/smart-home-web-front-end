@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate  } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
+import { baseUrl } from '../../constant/base';
 
 function Copyright(props) {
   return (
@@ -161,7 +162,7 @@ const Login = () => {
                   </Button>
                 </Grid>
                 <Grid item>
-                <Link href="http://localhost:3001/auth/signup" variant="body2">
+                <Link href = {{baseUrl} + "/auth/signup"} variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>

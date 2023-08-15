@@ -5,6 +5,7 @@ import SignUp from './components/signup/Signup';
 import ForgotPassword from './components/forgot-password.js/Forgot-password';
 import Dashboard from './components/dashboard/Dashboard';
 import Home from './components/dashboard/Home';
+import Profile from './components/dashboard/Profile';
 const App = () => {
   return (
     <Router>
@@ -13,7 +14,8 @@ const App = () => {
         <Route path="/auth/signup" element={<SignUp />} />
         <Route path="/home" element={<Home />} />
         <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard/*" element={<Dashboard />} />
+
       </Routes>
     </Router>
   );
