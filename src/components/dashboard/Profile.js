@@ -1,15 +1,32 @@
 import * as React from 'react';
-import { useState,useEffect } from 'react';
+import { useState,useEffect  } from 'react';
+import {useParams} from 'react-router-dom'
 import Title from './Title';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
-import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
-import Dashboard from './Dashboard';
+import {Box,Avatar,Typography,CircularProgress  }  from '@mui/material' ;
+import axios from 'axios'
+import { baseUrl } from '../../constant/base';
 const accessToken = localStorage.getItem('accessToken');
-
 export default function Profile() {
-  
+  const { id } = useParams();
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const response = await axios.get(`${baseUrl}/user/${id}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        setUserData(response.data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    }
+
+    fetchUserData();
+  }, [id]);
   return (
     <React.Fragment>
       <Title>Profile</Title>
@@ -37,20 +54,38 @@ export default function Profile() {
             border: '2px solid #ccc',
           }}
       />
-      <Box
-        sx={{
-            border: '2px solid #ccc', 
-            padding: 2, 
-            borderRadius: 8, 
-          }}>
-        <Typography variant="h6" gutterBottom>
-          John Doe
-        </Typography>
-        <Typography variant="body1">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a sem
-          sit amet enim egestas maximus non sed libero.
-        </Typography>
-      </Box>
+{userData ? (
+        <Box
+          sx={{
+            border: '2px solid #ccc',
+            padding: 2,
+            borderRadius: 8,
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            {userData.profile && userData.profile.name !== null
+                ? userData.profile.name
+                : ''}
+            </Typography>
+            {userData.email && (
+              <Typography variant="body1">
+                Email: {userData.email}
+              </Typography>
+            )}
+            {userData.profile && userData.profile.birth !== null && (
+              <Typography variant="body1">
+                Birth: {userData.profile.birth}
+              </Typography>
+            )}
+            {userData.profile && userData.profile.address !== null && (
+              <Typography variant="body1">
+                Address: {userData.profile.address}
+              </Typography>
+            )}
+        </Box>
+      ) : (
+        <CircularProgress />
+      )}
     </Box>
     </React.Fragment>
   );

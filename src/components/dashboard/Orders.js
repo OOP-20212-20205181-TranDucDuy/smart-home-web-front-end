@@ -13,6 +13,7 @@ import TextField from '@mui/material/TextField';
 import { baseUrl } from '../../constant/base';
 import axios from 'axios'
 import ForwardIcon from '@mui/icons-material/Forward';
+import { Link } from 'react-router-dom';
 
 // Generate Order Data
 
@@ -56,8 +57,13 @@ export default function Orders() {
               <TableCell>{row.isActive.toString()}</TableCell>
               <TableCell>{row.roles}</TableCell>
               <TableCell align="right">{row.profile ? `${row.profile.name}` : ''}</TableCell>
-              <TableCell>
-                <IconButton onClick = {() => localStorage.setItem('user_id',row.id)}> <ForwardIcon /> </IconButton>
+              <TableCell align="right">
+                <IconButton
+                    component={Link}
+                    to={`/dashboard/users/profile/${row.id}`}
+                  >
+                <ForwardIcon />
+              </IconButton>
               </TableCell>
             </TableRow>
           ))}

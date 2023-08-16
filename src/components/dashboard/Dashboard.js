@@ -31,7 +31,6 @@ import LayersIcon from '@mui/icons-material/Layers';
 import { useState } from 'react';
 import Profile from './Profile';
 import { Route, Routes } from 'react-router-dom';
-import { baseUrl, clientUrl } from '../../constant/base';
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
