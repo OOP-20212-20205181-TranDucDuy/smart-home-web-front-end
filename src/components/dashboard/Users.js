@@ -13,14 +13,18 @@ import TextField from '@mui/material/TextField';
 import { baseUrl } from '../../constant/base';
 import axios from 'axios'
 import ForwardIcon from '@mui/icons-material/Forward';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { filterRowsBySearch } from '../utils/Search';
 
 // Generate Order Data
 
-export default function Orders() {
+export default function Users() {
   const accessToken = localStorage.getItem('accessToken');
-  const [rows,setRow] = useState([]);
-  const [page,setPage] = useState(1);
+  const [rows, setRow] = useState([]);
+  const [filteredRows, setFilteredRows] = useState([]);
+  const [page, setPage] = useState(1);
+  const [searchInput, setSearchInput] = useState('');
+  const navigate = useNavigate();
   useEffect(() => {
     async function fetchData() {
     await axios.get(baseUrl+`/user?page=${page}`,{
@@ -29,16 +33,34 @@ export default function Orders() {
       }})
       .then(response => {
         setRow(response.data);
+        const filteredData = filterRowsBySearch(response.data.data, searchInput);
+        setFilteredRows(filteredData);
       })
       .catch(error => {
-        console.error('Error fetching data:', error);
+        if (error.response) {
+          if (error.response.status === 401) {
+            localStorage.removeItem('accessToken');
+            navigate('/');
+            alert('Unauthorized error:', error.response.data);
+          } else if (error.response.status === 500) {
+            alert('Internal Server Error:', error.response.data);
+          }
+        } else {
+          console.log('Error:', error.message);
+        }
       });
     }
     fetchData();
-    } , [page]);
+    } , [page,searchInput]);
   return (
     <React.Fragment>
       <Title>User</Title>
+      <TextField
+        label="Search"
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
+        style={{ marginBottom: '20px' }}
+      />
       <Table size="small">
         <TableHead>
           <TableRow>
