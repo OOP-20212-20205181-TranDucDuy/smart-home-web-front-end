@@ -16,7 +16,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import SensorsIcon from '@mui/icons-material/Sensors';
 export const mainListItems = (
   <React.Fragment>
-                  <ListItemButton>
+                  <ListItemButton component={Link} to="/dashboard">
                 <ListItemIcon>
                   <DashboardIcon />
                 </ListItemIcon>

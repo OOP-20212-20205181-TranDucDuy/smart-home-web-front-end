@@ -20,61 +20,71 @@ import filterRowsBySearch from '../utils/Search'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 // Generate Order Data
-
+const accessToken = localStorage.getItem('accessToken');
 export default function Home() {
-  const accessToken = localStorage.getItem('accessToken');
+  
   const [rows,setRow] = useState([]);
   const [page,setPage] = useState(1);
   const [searchInput,setSearchInput] = useState("");
   const [filteredRows, setFilteredRows] = useState([]);
   const navigate = useNavigate();
-  const handleActiceHome = async (id) => {
-    await axios.post(`${baseUrl}/home/active-smarthome/${id}`,
-    {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      }}).then(response => {
-        console.log(response);
-      })
-      .catch((error) => {
-        if (error.response) {
-          if (error.response.status === 401) {
-            localStorage.removeItem('accessToken');
-            navigate('/');
-            alert('Unauthorized error:', error.response.data);
-          } else if (error.response.status === 500) {
-            alert('Internal Server Error:', error.response.data);
-          }
-      };
-    });
-  }
-  useEffect(() => {
-    async function fetchData() {
-    await axios.get(baseUrl+`/home?page=${page}`,{
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      }})
-      .then(response => {
-        setRow(response.data.data);
-        const filteredData = filterRowsBySearch(response.data.data, searchInput);
-        setFilteredRows(filteredData);
-      })
-      .catch((error) => {
-        if (error.response) {
-          if (error.response.status === 401) {
-            localStorage.removeItem('accessToken');
-            navigate('/');
-            alert('Unauthorized error:', error.response.data);
-          } else if (error.response.status === 500) {
-            alert('Internal Server Error:', error.response.data);
-          }
-        } else {
-          console.log('Error:', error.message);
+  const handleActiveHome = async (id) => {
+    try {
+      const response = await axios.post(
+        `${baseUrl}/home/active-smarthome/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
-      });
+      );
+      console.log(response);
+      // You might want to update the data after activating a home
+      fetchData();
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          localStorage.removeItem('accessToken');
+          navigate('/');
+          alert('Unauthorized error:', error.response.data);
+        } else if (error.response.status === 500) {
+          alert('Internal Server Error:', error.response.data);
+        }
+      } else {
+        console.log('Error:', error.message);
+      }
     }
+  };
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(baseUrl + `/home?page=${page}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setRow(response.data.data);
+      const filteredData = filterRowsBySearch(response.data.data, searchInput);
+      setFilteredRows(filteredData);
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          localStorage.removeItem('accessToken');
+          navigate('/');
+          alert('Unauthorized error:', error.response.data);
+        } else if (error.response.status === 500) {
+          alert('Internal Server Error:', error.response.data);
+        }
+      } else {
+        console.log('Error:', error.message);
+      }
+    }
+  };
+
+  useEffect(() => {
     fetchData();
-    } ,[page, searchInput ,handleActiceHome]);
+  }, [page, searchInput]);
   return (
     <React.Fragment>
       <Title>Homes</Title>
@@ -93,6 +103,7 @@ export default function Home() {
             <TableCell>IsActive</TableCell>
             <TableCell>Wifi</TableCell>
             <TableCell>Owner</TableCell>
+            <TableCell align="right">Active</TableCell>
           </TableRow>
         </TableHead>
         {filteredRows.length !== 0 ? (
@@ -107,7 +118,7 @@ export default function Home() {
               {row.isActive === false ? (
                   <TableCell align="right">
                   <IconButton
-                      onClick={() => handleActiceHome(row.id)}
+                      onClick={() => handleActiveHome(row.id)}
                     >
                   <CheckCircleIcon />
                 </IconButton>
