@@ -92,6 +92,7 @@ export default function Home() {
             <TableCell>Address</TableCell>
             <TableCell>IsActive</TableCell>
             <TableCell>Wifi</TableCell>
+            <TableCell>Owner</TableCell>
           </TableRow>
         </TableHead>
         {filteredRows.length !== 0 ? (
@@ -102,6 +103,7 @@ export default function Home() {
               <TableCell>{row.address}</TableCell>
               <TableCell>{row.isActive.toString()}</TableCell>
               <TableCell>{row.wifi}</TableCell>
+              <TableCell>{row.owner.profile.id}</TableCell>
               {row.isActive === false ? (
                   <TableCell align="right">
                   <IconButton

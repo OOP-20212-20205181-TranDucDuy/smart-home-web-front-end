@@ -11,6 +11,9 @@ import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { Link } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import LogoutIcon from '@mui/icons-material/Logout';
+import SensorsIcon from '@mui/icons-material/Sensors';
 export const mainListItems = (
   <React.Fragment>
                   <ListItemButton>
@@ -19,7 +22,7 @@ export const mainListItems = (
                 </ListItemIcon>
                 <ListItemText primary="Dashboard"/>
               </ListItemButton>
-              <ListItemButton >
+              <ListItemButton component={Link} to="/dashboard/homes">
                 <ListItemIcon>
                   <HomeIcon />
                 </ListItemIcon>
@@ -31,24 +34,19 @@ export const mainListItems = (
                 </ListItemIcon>
                 <ListItemText primary="Users"/>
               </ListItemButton>
-              <ListItemButton>
+              <ListItemButton component={Link} to="/dashboard/devices">
                 <ListItemIcon>
-                  <BarChartIcon />
+                  <SensorsIcon />
                 </ListItemIcon>
-                <ListItemText primary="Reports"/>
+                <ListItemText primary="Device"/>
               </ListItemButton>
-              <ListItemButton>
-                <ListItemIcon>
-                  <LayersIcon />
-                </ListItemIcon>
-                <ListItemText primary="Integrations"/>
-              </ListItemButton>
+             
   </React.Fragment>
 );
 
 export const secondaryListItems = (
   <React.Fragment>
-    <ListSubheader component="div" inset>
+    {/* <ListSubheader component="div" inset>
       Saved reports
     </ListSubheader>
     <ListItemButton>
@@ -68,6 +66,25 @@ export const secondaryListItems = (
         <AssignmentIcon />
       </ListItemIcon>
       <ListItemText primary="Year-end sale" />
+    </ListItemButton> */}
+  </React.Fragment>
+);
+export const LastListItems = (
+  <React.Fragment>
+      <ListSubheader component="div" inset>
+      Setting
+    </ListSubheader>
+    <ListItemButton>
+      <ListItemIcon>
+        <ManageAccountsIcon />
+      </ListItemIcon>
+      <ListItemText primary="Update User" />
+    </ListItemButton>
+    <ListItemButton component={Link} to="/dashboard/logout">
+      <ListItemIcon>
+        <LogoutIcon />
+      </ListItemIcon>
+      <ListItemText primary="Log out" />
     </ListItemButton>
   </React.Fragment>
 );

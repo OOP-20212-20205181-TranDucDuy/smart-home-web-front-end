@@ -1,29 +1,24 @@
 import * as React from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import { useEffect } from 'react';
+import { CircularProgress, Paper, Container, Grid , Link ,Badge,IconButton,Divider,Typography,Box, Toolbar,List } from '@mui/material';
+import {  createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import {Box, Toolbar} from '@mui/material';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems, secondaryListItems } from './listItems';
-import Chart from './Chart';
-import Deposits from './Deposits';
-import Users from './Users';
+import { LastListItems, mainListItems, secondaryListItems } from './listItems';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Profile from './Profile';
 import { Route, Routes } from 'react-router-dom';
 import { AppBar } from '../utils/AppBar';
 import { Drawer } from '../utils/Drawer';
-;
+import { Logout } from '../logout/Logout'
+import Home from './Home';
+import Users from './Users';
+import videoBg from '../../assets/background.mp4'
+import VideoBackground from './BackGround';
+import Device from './Device';
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -36,31 +31,35 @@ function Copyright(props) {
     </Typography>
   );
 }
-
-
-
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 const accessToken = localStorage.getItem('accessToken');
 export default function Dashboard() {
-  if(localStorage.getItem('role') !== 'admin'){
-    throw new Error("Must be admin account");
-  }
-  if(localStorage.getItem('accessToken') == null){
-    throw new Error("Must login to access")
-  }
+  console.log(accessToken)
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (localStorage.getItem('role') !== 'admin') {
+      alert('It must be admin account');
+      navigate('/');
+    }
+    if (localStorage.getItem('accessToken') === null) {
+      alert('Login in first');
+      navigate('/');
+    }
+  }, []);
   const [open, setOpen] = useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
+    <ThemeProvider theme={defaultTheme} >
+      <Box sx={{ display: 'flex' , flexGrow: 2,}}>
+      <VideoBackground /> 
+        <CssBaseline /> 
         <AppBar position="absolute" open={open}>
+           
           <Toolbar
             sx={{
-              pr: '24px', // keep right padding when drawer closed
+              pr: '24px',
             }}
           >
             <IconButton
@@ -109,15 +108,16 @@ export default function Dashboard() {
               {mainListItems}
             <Divider sx={{ my: 1 }} />
             {secondaryListItems}
+            <Divider sx={{ my: 1 }} />
+            {LastListItems}
+            <Routes>
+                <Route path="logout" element={<Logout />} />
+            </Routes>
           </List>
         </Drawer>
         <Box
           component="main"
           sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
             flexGrow: 1,
             height: '100vh',
             overflow: 'auto',
@@ -131,6 +131,8 @@ export default function Dashboard() {
                   <Routes>
                     <Route path="users" element={<Users />} />
                     <Route path="users/profile/:id" element={<Profile />} />
+                    <Route path="homes" element={<Home />} />
+                    <Route path="devices" element={<Device />} />
                   </Routes>
                 </Paper>
               </Grid>
@@ -141,4 +143,4 @@ export default function Dashboard() {
       </Box>
     </ThemeProvider>
   );
-}
+} 
