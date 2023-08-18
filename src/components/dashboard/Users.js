@@ -3,6 +3,7 @@ import { useState,useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { CircularProgress } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -14,7 +15,7 @@ import { baseUrl } from '../../constant/base';
 import axios from 'axios'
 import ForwardIcon from '@mui/icons-material/Forward';
 import { Link, useNavigate } from 'react-router-dom';
-import { filterRowsBySearch } from '../utils/Search';
+import  filterRowsBySearch from '../utils/Search';
 
 // Generate Order Data
 
@@ -33,7 +34,7 @@ export default function Users() {
       }})
       .then(response => {
         setRow(response.data);
-        const filteredData = filterRowsBySearch(response.data.data, searchInput);
+        const filteredData = filterRowsBySearch(response.data, searchInput);
         setFilteredRows(filteredData);
       })
       .catch(error => {
@@ -71,14 +72,15 @@ export default function Users() {
             <TableCell align="right">Name</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {rows.map((row) => (
+        {filteredRows.length !== 0 ? (
+          <TableBody>
+          {filteredRows.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.id}</TableCell>
               <TableCell>{row.email}</TableCell>
               <TableCell>{row.isActive.toString()}</TableCell>
               <TableCell>{row.roles}</TableCell>
-              <TableCell align="right">{row.profile ? `${row.profile.name}` : ''}</TableCell>
+              <TableCell align="right">{row.profile.name ? (row.profile.name): ("")}</TableCell>
               <TableCell align="right">
                 <IconButton
                     component={Link}
@@ -90,6 +92,15 @@ export default function Users() {
             </TableRow>
           ))}
         </TableBody>
+        ) :(
+          <TableBody>
+            <TableRow>
+              <TableCell colSpan={6} align="center">
+                <CircularProgress />
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        )}
       </Table>
       <Table size='small'>
       <TableBody>
@@ -108,7 +119,7 @@ export default function Users() {
               />
              </TableCell>
             <TableCell colSpan={5} align="center">
-              <IconButton onClick={() => setPage(page + 1) } disabled={rows.length === 0}>
+              <IconButton onClick={() => setPage(page + 1) } disabled={filteredRows.length === 0}>
                 <NavigateNextIcon />
               </IconButton> 
               

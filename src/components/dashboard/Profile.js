@@ -31,16 +31,22 @@ export default function Profile() {
     <React.Fragment>
       <Title>Profile</Title>
       <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        padding: 2,
-        border: '1px solid #ccc',
-        borderRadius: 8,
-        boxShadow: 2,
-        flexDirection: { xs: 'column', md: 'row' },
-      }}
-    >
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          padding: 2,
+          border: '1px solid #ccc',
+          borderRadius: 8,
+          boxShadow: 2,
+          flexDirection: { xs: 'column', md: 'row' },
+          // Additional CSS to cover the entire box
+          width: '100%', // Cover the entire width of the parent container
+          height: '100%', // Cover the entire height of the parent container
+          boxSizing: 'border-box', // Include padding and border in the total width/height
+          justifyContent: 'center', // Center content horizontally
+          alignItems: 'center', // Center content vertically
+        }}
+      >
       <Avatar
         alt="User Avatar"
         src={"https://img.meta.com.vn/Data/image/2022/06/16/avatar-vo-dien-hinh-nen-vo-dien-1.jpg"}
@@ -55,13 +61,19 @@ export default function Profile() {
           }}
       />
 {userData ? (
-        <Box
-          sx={{
-            border: '2px solid #ccc',
-            padding: 2,
-            borderRadius: 8,
-          }}
-        >
+         <Box
+         sx={{
+           // Additional CSS for user information box
+           border: '2px solid #ccc',
+           padding: 2,
+           borderRadius: 8,
+           textAlign: 'center', // Center text within the box
+           flex: '1', // Allow this box to expand and cover remaining space
+           display: 'flex',
+           flexDirection: 'column',
+           alignItems: 'center',
+         }}
+       >
           <Typography variant="h6" gutterBottom>
             {userData.profile && userData.profile.name !== null
                 ? userData.profile.name
