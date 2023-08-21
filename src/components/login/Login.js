@@ -162,7 +162,7 @@ const Login = () => {
                   </Button>
                 </Grid>
                 <Grid item>
-                <Link href = {{baseUrl} + "/auth/signup"} variant="body2">
+                <Link href = {"http://localhost:3006/auth/signup"} variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>

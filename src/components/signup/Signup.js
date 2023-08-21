@@ -1,58 +1,6 @@
-// import React, { useState } from 'react';
-// import axios from 'axios';
-// import { useNavigate  } from 'react-router-dom';
-// import './Signup.css'; // Import your custom CSS file for styling
-
-// const SignUp = ({ apiUrl }) => {
-//   const navigate = useNavigate(); // Initialize useNavigate  
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-//   const [error, setError] = useState('');
-
-//   const handleSignUp = async () => {
-//     try {
-//       const response = await axios.post(`${apiUrl}/auth/signup`, {
-//         email,
-//         password,
-//       });
-
-//       // Handle successful sign-up (e.g., show a success message)
-//       navigate('api/v2/auth/login'); // Use navigate function to redirect
-//       console.log('Signed up:', response.data);
-//     } catch (err) {
-//       setError('Sign-up failed. Please try again.');
-//     }
-//   };
-
-//   return (
-//     <div className="signup-container">
-//       <h2>Sign Up</h2>
-//       <div>
-//         <input
-//           type="email"
-//           placeholder="Email"
-//           value={email}
-//           onChange={(e) => setEmail(e.target.value)}
-//         />
-//       </div>
-//       <div>
-//         <input
-//           type="password"
-//           placeholder="Password"
-//           value={password}
-//           onChange={(e) => setPassword(e.target.value)}
-//         />
-//       </div>
-//       <button onClick={handleSignUp}>Sign Up</button>
-//       {error && <p>{error}</p>}
-//     </div>
-//   );
-// };
-
-// export default SignUp;
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate  } from 'react-router-dom';
+import { useAsyncError, useNavigate  } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -66,7 +14,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import { baseUrl } from '../../constant/base';
+import { CircularProgress } from '@mui/material';
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -85,27 +34,50 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-  const BASE_URL = 'http://localhost:3000/api/v2';
   const navigate = useNavigate(); // Initialize useNavigate  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [otp, setOTP] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isActive , setIsActive] = useState(false);
   const handleSignUp = async () => {
     try {
-      const response = await axios.post(`${BASE_URL}/auth/signup`, {
+      setIsLoading(true); 
+      const response = await axios.post(`${baseUrl}/auth/signup`, {
         email,
         password,
       });
-
-      // Handle successful sign-up (e.g., show a success message)
-      navigate('api/v2/auth/login'); // Use navigate function to redirect
-      console.log('Signed up:', response.data);
+      setOTP(response.data.otp);
+      
+      alert("Please active account in gmail")
     } catch (err) {
       setError('Sign-up failed. Please try again.');
     }
   };
-
-
+  const handleActive = async () => {
+    try {
+      const response = await axios.post(`${baseUrl}/auth/login`, {
+        email : email,
+        password : password,
+      });
+      if(response.data){
+        setIsActive(true);
+      }
+    }
+    catch (err){
+      setError('Sign-up failed. Please try again.');
+    }
+  }
+  useEffect(() => {
+    if (otp) {
+      // You can trigger the handleActive function here if otp is set.
+      handleActive();
+    }
+    if (isActive == true){
+      navigate('/'); // Use navigate function to redirect
+    }
+  }, [otp]);
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -124,7 +96,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSignUp} sx={{ mt: 3 }}>
+          {isLoading ? <CircularProgress size={24} /> : <Box component="form" noValidate onSubmit={handleSignUp} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -161,17 +133,18 @@ export default function SignUp() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={isLoading}
             >
               Sign Up
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="http://localhost:3001/" variant="body2">
+                <Link href="http://localhost:3006/" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
             </Grid>
-          </Box>
+          </Box>}
         </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>
