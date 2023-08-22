@@ -17,8 +17,8 @@ import axios from 'axios'
 import ForwardIcon from '@mui/icons-material/Forward';
 import { Link, useNavigate } from 'react-router-dom';
 import filterRowsBySearch from '../utils/Search'
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-
+import AddHomeIcon from '@mui/icons-material/AddHome';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 // Generate Order Data
 const accessToken = localStorage.getItem('accessToken');
 export default function MyHome() { 
@@ -37,6 +37,7 @@ export default function MyHome() {
       setRow(response.data);
       const filteredData = filterRowsBySearch(response.data, searchInput);
       setFilteredRows(filteredData);
+      console.log(filteredData)
     } catch (error) {
       if (error.response) {
         if (error.response.status === 401) {
@@ -51,13 +52,17 @@ export default function MyHome() {
       }
     }
   };
-
+  console.log(rows)
   useEffect(() => {
     fetchData();
   }, [page, searchInput]);
   return (
     <React.Fragment>
-      <Title>Homes</Title>
+      <Title>Homes
+        <Button component={Link} to="/home/myHomes/add">
+          <AddHomeIcon/>
+        </Button>
+      </Title>
       <TextField
         label="Search"
         value={searchInput}
@@ -72,8 +77,8 @@ export default function MyHome() {
             <TableCell>Address</TableCell>
             <TableCell>IsActive</TableCell>
             <TableCell>Wifi</TableCell>
-            <TableCell>Owner</TableCell>
-            <TableCell align="right">Active</TableCell>
+            <TableCell >Owner</TableCell>
+            <TableCell align='right' >Add Device </TableCell>
           </TableRow>
         </TableHead>
         {filteredRows.length !== 0 ? (
@@ -84,8 +89,10 @@ export default function MyHome() {
               <TableCell>{row.address}</TableCell>
               <TableCell>{row.isActive.toString()}</TableCell>
               <TableCell>{row.wifi}</TableCell>
-              <TableCell>{row.owner.profile.id}</TableCell>
-              
+              <TableCell >{row.owner.id}</TableCell>
+              <TableCell align='right'>
+              {row.isActive == true ? (<IconButton component={Link} to="/home/myHomes/addDevice" ><AddCircleIcon/> </IconButton>) : (<CircularProgress />)}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

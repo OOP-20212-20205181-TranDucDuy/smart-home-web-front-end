@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useAsyncError, useNavigate  } from 'react-router-dom';
+import { Route, Routes, useAsyncError, useNavigate  } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,6 +16,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { baseUrl } from '../../constant/base';
 import { CircularProgress } from '@mui/material';
+import VerifyEmail from '../verify-email/Verify-email';
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -48,18 +49,21 @@ export default function SignUp() {
         email,
         password,
       });
-      setOTP(response.data.otp);
       
-      alert("Please active account in gmail")
-    } catch (err) {
-      setError('Sign-up failed. Please try again.');
+      setOTP(response.data.otp); 
+      alert("Please active account in gmail");
+    } catch (error) {
+      if(error.response.status == 400){
+        setIsLoading(false);
+        alert("Email has been used");
+        navigate("/auth/signup")
+      }
     }
   };
-  const handleActive = async () => {
+  const handleResendEmail = async () => {
     try {
-      const response = await axios.post(`${baseUrl}/auth/login`, {
+      const response = await axios.post(`${baseUrl}/auth/resend-email`, {
         email : email,
-        password : password,
       });
       if(response.data){
         setIsActive(true);
@@ -69,15 +73,6 @@ export default function SignUp() {
       setError('Sign-up failed. Please try again.');
     }
   }
-  useEffect(() => {
-    if (otp) {
-      // You can trigger the handleActive function here if otp is set.
-      handleActive();
-    }
-    if (isActive == true){
-      navigate('/'); // Use navigate function to redirect
-    }
-  }, [otp]);
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -96,7 +91,19 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          {isLoading ? <CircularProgress size={24} /> : <Box component="form" noValidate onSubmit={handleSignUp} sx={{ mt: 3 }}>
+          { isLoading == true ? 
+          (<Box
+                sx={{
+                  marginTop: 8,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}
+              >
+                Verify your account by click link in your email : {email}.If you are not receive email, please try to resend email by the link
+                <Link onClick={handleResendEmail}>Resend Email</Link>
+            </Box>
+          ) : <Box component="form" noValidate sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -129,7 +136,7 @@ export default function SignUp() {
               </Grid>
             </Grid>
             <Button
-              type="submit"
+              onClick={handleSignUp}
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}

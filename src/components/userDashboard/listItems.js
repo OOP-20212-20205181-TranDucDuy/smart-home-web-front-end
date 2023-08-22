@@ -29,7 +29,7 @@ export const mainListItems = (
                 <ListItemIcon>
                   <PeopleIcon />
                 </ListItemIcon>
-                <ListItemText primary="Users"/>
+                <ListItemText primary="Profile"/>
               </ListItemButton>
               <ListItemButton component={Link} to="/home/myDevices">
                 <ListItemIcon>
@@ -77,7 +77,7 @@ export const LastListItems = (
       </ListItemIcon>
       <ListItemText primary="Update User" />
     </ListItemButton>
-    <ListItemButton component={Link} to="/dashboard/logout">
+    <ListItemButton component={Link} to="/home/logout">
       <ListItemIcon>
         <LogoutIcon />
       </ListItemIcon>

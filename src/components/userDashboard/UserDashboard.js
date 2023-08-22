@@ -9,7 +9,6 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { LastListItems, mainListItems, secondaryListItems } from './listItems';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import Profile from './Profile';
 import { Route, Routes } from 'react-router-dom';
 import { AppBar } from '../utils/AppBar';
 import { Drawer } from '../utils/Drawer';
@@ -17,6 +16,8 @@ import { Logout } from '../logout/Logout'
 import VideoBackground from './BackGround';
 import Device from './Device';
 import MyHome from './Home';
+import OwnerProfile from './OwnerProfile';
+import Checkout from './checkout/Checkout';
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -29,11 +30,11 @@ function Copyright(props) {
     </Typography>
   );
 }
-const defaultTheme = createTheme();
 const accessToken = localStorage.getItem('accessToken');
+const defaultTheme = createTheme();
 export default function UserDashboard() {
-  console.log(accessToken)
   const navigate = useNavigate();
+  console.log(accessToken)
   useEffect(() => {
     if (localStorage.getItem('role') !== 'user') {
       alert('It must be user account');
@@ -126,11 +127,12 @@ export default function UserDashboard() {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Routes>
-                    <Route path="home" element={<UserDashboard />} />
-                    <Route path="home/myProfile" element={<Profile />} />
-                    <Route path="home/myHomes" element={<MyHome />} />
-                    <Route path="home/myDevices" element={<Device />} />
+                  <Routes> 
+                    <Route path="myProfile" element={<OwnerProfile />} />
+                    <Route path="myHomes" element={<MyHome />} />
+                    <Route path="myDevices" element={<Device />} />
+                    <Route path="myHomes/add" element={<Checkout />} />
+                    <Route path="myHomes/addDevice" element={<Checkout />} />
                   </Routes>
                 </Paper>
               </Grid>

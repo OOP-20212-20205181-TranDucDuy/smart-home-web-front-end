@@ -1,32 +1,41 @@
 import * as React from 'react';
 import { useState,useEffect  } from 'react';
-import {useParams} from 'react-router-dom'
 import Title from './Title';
 import {Box,Avatar,Typography,CircularProgress  }  from '@mui/material' ;
 import axios from 'axios'
 import { baseUrl } from '../../constant/base';
+import { useNavigate } from 'react-router-dom';
 const accessToken = localStorage.getItem('accessToken');
-export default function Profile() {
-  const { id } = useParams();
+export default function OwnerProfile() {
+  console.log("calling");
   const [userData, setUserData] = useState(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     async function fetchUserData() {
+      
       try {
-        const response = await axios.get(`${baseUrl}/user/${id}`, {
+        const response = await axios.get(`${baseUrl}/user/owner/profile`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-
         setUserData(response.data);
+        console.log(response)
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        if (error.response.status === 401) {
+          localStorage.removeItem('accessToken');
+          navigate('/');
+          alert('Unauthorized error:', error.response.data);
+        } else if (error.response.status === 500) {
+          alert('Internal Server Error:', error.response.data);
+        }
+       else {
+        console.log('Error:', error.message);
+        }
       }
     }
-
     fetchUserData();
-  }, [id]);
+  }, []);
   return (
     <React.Fragment>
       <Title>Profile</Title>
@@ -60,7 +69,7 @@ export default function Profile() {
             border: '2px solid #ccc',
           }}
       />
-{userData ? (
+        {userData ? (
          <Box
          sx={{
            // Additional CSS for user information box

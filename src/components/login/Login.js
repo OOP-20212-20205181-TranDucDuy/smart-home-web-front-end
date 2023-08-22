@@ -59,6 +59,7 @@ const Login = () => {
         navigate('/dashboard'); // Redirect to admin dashboard
       } else {
         navigate('/home'); // Redirect to user's home page
+        localStorage.setItem('name',response.data.profile.name)
       }
       } catch (err) {
         setError('Invalid credentials. Please try again.');
