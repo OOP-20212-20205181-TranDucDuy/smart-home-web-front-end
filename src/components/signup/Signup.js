@@ -53,7 +53,7 @@ export default function SignUp() {
       setOTP(response.data.otp); 
       alert("Please active account in gmail");
     } catch (error) {
-      if(error.response.status == 400){
+      if(error.response.status === 400){
         setIsLoading(false);
         alert("Email has been used");
         navigate("/auth/signup")
@@ -91,7 +91,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          { isLoading == true ? 
+          { isLoading === true ? 
           (<Box
                 sx={{
                   marginTop: 8,

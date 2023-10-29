@@ -33,8 +33,8 @@ function Copyright() {
 const steps = ['Home address', 'Room', 'Review your home'];
 
 
-
 export default function Checkout() {
+  const accessToken = localStorage.getItem('accessToken');
   const [activeStep, setActiveStep] = useState(0);
   const [home, setHomeId] = useState("");
   const [addressFormData, setAddressFormData] = useState({
@@ -58,16 +58,21 @@ export default function Checkout() {
     setActiveStep(activeStep - 1);
   };
   const handleAddHome = async () => {
-    await axios.post(`${baseUrl}/home`,{
-      address : Object.values(addressFormData).join(', '),
-
-    }).then(res => {
-      setHomeId(res.data.id)
-    })
-    .catch(err => {
-      console.log(err)
-    })
+    try {
+      const response = await axios.post(`${baseUrl}/home`, {
+        address: Object.values(addressFormData).join(', ')
+      }, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
+  
+      setHomeId(response.data.id);
+    } catch (error) {
+      console.log(error);
+    }
   }
+  
   function getStepContent(step) {
     switch (step) {
       case 0:

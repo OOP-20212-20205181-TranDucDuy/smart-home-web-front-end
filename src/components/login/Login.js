@@ -36,7 +36,7 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 const Login = () => {
-      const BASE_URL = 'http://localhost:3000/api/v2';
+      const BASE_URL = 'http://localhost:3003/api/v2';
       const navigate = useNavigate();
       const [email, setEmail] = useState('');
       const [password, setPassword] = useState('');
